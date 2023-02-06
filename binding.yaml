@@ -4,9 +4,9 @@ metadata:
   name: sample-spring-boot
 spec:
   params:
-  - name: git-repo-url
+  - name: github-repo-url
     value: $(body.repository.url)
-  - name: git-repo-name
+  - name: APP_NAME
     value: $(body.repository.name)
-  - name: git-revision
+  - name: github-repo-revision
     value: $(body.head_commit.id)

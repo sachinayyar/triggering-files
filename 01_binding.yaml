@@ -1,12 +1,12 @@
-apiVersion: triggers.tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1beta1
 kind: TriggerBinding
 metadata:
-  name: sample-spring-boot
+  name: sample-boot
 spec:
   params:
-  - name: github-repo-url
+  - name: git-repo-url
     value: $(body.repository.url)
-  - name: APP_NAME
+  - name: git-repo-name
     value: $(body.repository.name)
-  - name: github-repo-revision
+  - name: git-revision
     value: $(body.head_commit.id)

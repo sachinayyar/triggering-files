@@ -1,0 +1,35 @@
+apiVersion: triggers.tekton.dev/v1beta1
+kind: TriggerTemplate
+metadata:
+  name: sample-spring-boot
+spec:
+  params:
+  - name: github-repo-url
+    description: The git repository url
+  - name: github-repo-revision
+    description: The git revision
+    default: master
+  - name: APP_NAME
+    description: The name of the deployment to be created / patched
+
+  resourcetemplates:
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      generateName: tekton-argo-pipeline-
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: tekton-argo-pipeline
+      params:
+      - name: APP_NAME
+        value: $(tt.params.APP_NAME)
+      - name: github-repo-url
+        value: $(tt.params.github-repo-url)
+      - name: github-repo-revision
+        value: $(tt.params.github-repo-revision)
+      - name: image-name
+        value: quay.io/sachinayyar/tekton-argocd:1
+      workspaces:
+      - name: source-pvc
+       

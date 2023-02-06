@@ -1,4 +1,4 @@
-apiVersion: triggers.tekton.dev/v1beta1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
   name: sample-spring-boot
@@ -16,7 +16,7 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      generateName: tekton-argo-pipeline-
+      name: tekton-argo-pipeline-$(uid)
     spec:
       serviceAccountName: pipeline
       pipelineRef:
@@ -32,4 +32,4 @@ spec:
         value: quay.io/sachinayyar/tekton-argocd:1
       workspaces:
       - name: source-pvc
-       
+        

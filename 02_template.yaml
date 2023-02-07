@@ -29,7 +29,7 @@ spec:
       - name: git-revision
         value: $(tt.params.git-revision)
       - name: IMAGE
-        value: quay.io/sachinayyar/node-login:latest
+        value: quay.io/sachinayyar/tekton-argocd:1
       workspaces:
       - name: source
       - name: maven-settings

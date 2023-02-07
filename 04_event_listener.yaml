@@ -1,8 +1,8 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: sample-spring-boot
+  name: sample-boot
 spec:
   serviceAccountName: pipeline
   triggers:
-    - triggerRef: sample-trigger
+    - triggerRef: boot-trigger

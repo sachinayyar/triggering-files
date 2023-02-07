@@ -16,11 +16,11 @@ spec:
   - apiVersion: tekton.dev/v1beta1
     kind: PipelineRun
     metadata:
-      name: sample-spring-boot-$(uid)
+      name: tekton-argo-pipeline-$(uid)
     spec:
       serviceAccountName: pipeline
       pipelineRef:
-        name: sample-spring-boot
+        name: tekton-argo-pipeline
       params:
       - name: deployment-name
         value: $(tt.params.git-repo-name)

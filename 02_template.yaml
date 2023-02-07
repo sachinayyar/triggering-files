@@ -1,40 +1,42 @@
-apiVersion: tekton.dev/v1alpha1
+apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: my-trigger-template
+  name: sample-spring-boot
 spec:
   params:
-  - name: git-repo
-    description: The Git repository URL
-    default: https://github.com/sachinayyar/tekton-spring-boot.git
-  - name: git-commit
-    description: The Git commit SHA
-    default: abc123
-  - name: git-branch
-    description: The Git branch name
+  - name: git-repo-url
+    description: The git repository url
+  - name: git-revision
+    description: The git revision
     default: master
+  - name: git-repo-name
+    description: The name of the deployment to be created / patched
+
   resourcetemplates:
-  - name: source-repo
-    resource:
-      type: git
+  - apiVersion: tekton.dev/v1beta1
+    kind: PipelineRun
+    metadata:
+      name: sample-spring-boot-$(uid)
+    spec:
+      serviceAccountName: pipeline
+      pipelineRef:
+        name: sample-spring-boot
       params:
-      - name: url
-        value: $(params.git-repo)
-      - name: revision
-        value: $(params.git-commit)
-  - name: pipeline-run
-    resource:
-      apiVersion: tekton.dev/v1beta1
-      kind: PipelineRun
-      metadata:
-        name: sample-spring-boot-$(uid)
-      spec:
-        pipelineRef:
-          name: sample-spring-boot
-        resources:
-        - name: source-repo
-          resourceRef:
-            name: source-repo
-        params:
-        - name: git-branch
-          value: $(params.git-branch)
+      - name: deployment-name
+        value: $(tt.params.git-repo-name)
+      - name: git-url
+        value: $(tt.params.git-repo-url)
+      - name: git-revision
+        value: $(tt.params.git-revision)
+      - name: IMAGE
+        value: quay.io/sachinayyar/node-login:latest
+      workspaces:
+      - name: source
+      - name: maven-settings
+        volumeClaimTemplate:
+          spec:
+            accessModes:
+              - ReadWriteOnce
+            resources:
+              requests:
+                storage: 1Gi

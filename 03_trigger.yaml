@@ -1,10 +1,10 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: Trigger
 metadata:
-  name: sample-trigger
+  name: boot-trigger
 spec:
   serviceAccountName: pipeline
   bindings:
-   - ref: sample-spring-boot
+   - ref: sample-boot
   template:
-   name: sample-spring-boot
+   name: sample-boot

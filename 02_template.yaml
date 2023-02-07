@@ -4,13 +4,11 @@ metadata:
   name: sample-spring-boot
 spec:
   params:
-  - name: git-repo-url
+  - name: git-url
     description: The git repository url
   - name: git-revision
     description: The git revision
     default: master
-  - name: git-repo-name
-    description: The name of the deployment to be created / patched
 
   resourcetemplates:
   - apiVersion: tekton.dev/v1beta1
@@ -22,8 +20,6 @@ spec:
       pipelineRef:
         name: tekton-argo-pipeline
       params:
-      - name: deployment-name
-        value: $(tt.params.git-repo-name)
       - name: git-url
         value: $(tt.params.git-repo-url)
       - name: git-revision

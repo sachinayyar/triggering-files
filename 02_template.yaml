@@ -1,42 +1,40 @@
-apiVersion: triggers.tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: sample-boot
+  name: my-trigger-template
 spec:
   params:
-  - name: git-repo-url
-    description: The git repository url
-  - name: git-revision
-    description: The git revision
+  - name: git-repo
+    description: The Git repository URL
+    default: https://github.com/sachinayyar/tekton-spring-boot.git
+  - name: git-commit
+    description: The Git commit SHA
+    default: abc123
+  - name: git-branch
+    description: The Git branch name
     default: master
-  - name: git-repo-name
-    description: The name of the deployment to be created / patched
-
   resourcetemplates:
-  - apiVersion: tekton.dev/v1beta1
-    kind: PipelineRun
-    metadata:
-      name: tekton-argo-pipeline-$(uid)
-    spec:
-      serviceAccountName: pipeline
-      pipelineRef:
-        name: tekton-argo-pipeline
+  - name: source-repo
+    resource:
+      type: git
       params:
-      - name: APP_NAME
-        value: $(tt.params.git-repo-name)
-      - name: git-url
-        value: $(tt.params.git-repo-url)
-      - name: git-revision
-        value: $(tt.params.git-revision)
-      - name: image-name
-        value: quay.io/sachinayyar/tekton-argocd:1
-      workspaces:
-      - name: source
-      - name: maven-settings
-        volumeClaimTemplate:
-          spec:
-            accessModes:
-              - ReadWriteOnce
-            resources:
-              requests:
-                storage: 500Mi
+      - name: url
+        value: $(params.git-repo)
+      - name: revision
+        value: $(params.git-commit)
+  - name: pipeline-run
+    resource:
+      apiVersion: tekton.dev/v1beta1
+      kind: PipelineRun
+      metadata:
+        name: sample-spring-boot-$(uid)
+      spec:
+        pipelineRef:
+          name: sample-spring-boot
+        resources:
+        - name: source-repo
+          resourceRef:
+            name: source-repo
+        params:
+        - name: git-branch
+          value: $(params.git-branch)

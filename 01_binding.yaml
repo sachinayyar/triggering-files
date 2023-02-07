@@ -1,12 +1,21 @@
-apiVersion: triggers.tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1alpha1
 kind: TriggerBinding
 metadata:
-  name: sample-boot
+  name: my-trigger-binding
 spec:
   params:
-  - name: git-repo-url
-    value: $(body.repository.url)
-  - name: git-repo-name
-    value: $(body.repository.name)
-  - name: git-revision
+  - name: git-repo
+    description: The Git repository URL
+    value: $(body.repository.git_url)
+  - name: git-commit
+    description: The Git commit SHA
     value: $(body.head_commit.id)
+  - name: git-branch
+    description: The Git branch name
+    value: $(body.ref)
+  triggers:
+  - type: github
+    binding:
+      apiVersion: tekton.dev/v1alpha1
+      kind: TriggerBinding
+      name: my-github-trigger-binding

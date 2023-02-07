@@ -1,11 +1,12 @@
 apiVersion: triggers.tekton.dev/v1alpha1
 kind: TriggerTemplate
 metadata:
-  name: sample-spring-boot
+  name: sample-boot
 spec:
   params:
   - name: git-url
     description: The git repository url
+    default: https://github.com/sachinayyar/tekton-spring-boot.git
   - name: git-revision
     description: The git revision
     default: master

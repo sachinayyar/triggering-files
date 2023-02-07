@@ -1,8 +1,19 @@
-apiVersion: triggers.tekton.dev/v1alpha1
+apiVersion: tekton.dev/v1alpha1
 kind: EventListener
 metadata:
-  name: sample-boot
+  name: my-event-listener
 spec:
   serviceAccountName: pipeline
   triggers:
-    - triggerRef: sample-boot-trigger
+  - name: image-push-trigger
+    binding:
+      apiVersion: tekton.dev/v1alpha1
+      kind: TriggerBinding
+      name: my-image-push-binding
+    filter:
+      type: image
+      pattern:
+        kind: ImageStreamTag
+        name: my-image-stream:latest
+  template:
+    name: my-trigger-template
